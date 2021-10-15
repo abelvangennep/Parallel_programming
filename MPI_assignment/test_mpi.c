@@ -90,7 +90,8 @@ int main(int argc, char *argv) {
 	srand(time(NULL) * world_rank);
 	
 	MPI_Status status;
-	int* A = allocate_mem(N);
+	int* A; 
+	A = &allocate_mem(N);
 	int results = 0;
 	int flag = 0;
 	fill_random(&A, N);
