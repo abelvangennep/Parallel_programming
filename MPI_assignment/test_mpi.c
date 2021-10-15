@@ -106,7 +106,7 @@ int main(int argc, char *argv[]) {
 				int r=1;
 				MPI_Bcast(&r,1,MPI_INT,0,MPI_COMM_WORLD);
 				printf("process %d is finished\n",world_rank);
-				MPI_Barrier(MPI_Comm communicator);
+				MPI_Barrier(MPI_COMM_WORLD);
 				MPI_Finalize();
     				return 1;
 			}
@@ -114,12 +114,12 @@ int main(int argc, char *argv[]) {
     		} else {
 		results += test(subdomain_start + m);
 			if ( m > (R / world_size)) {
-				MPI_Send(&results, MPI_INT, 0, 0, MPI_Comm communicator)
+				MPI_Send(&results, 0, MPI_INT, 0, MPI_COMM_WORLD)
 				results = 0
 				MPI_Iprobe(0, 0, MPI_COMM_WORLD, &flag, &status);
 				if (flag){
 					printf("process %d is finished\n",world_rank);
-					MPI_Barrier(MPI_Comm communicator)
+					MPI_Barrier(MPI_COMM_WORLD)
 					MPI_Finalize();
     					return 1;
 				}
