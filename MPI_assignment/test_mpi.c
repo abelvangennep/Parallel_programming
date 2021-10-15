@@ -62,6 +62,71 @@ void fill_ascending(int *A, int N) {
 	}
 }
 
+void decompose_domain(int N, int world_rank, int world_size, int* subdomain_start, int* subdomain_size) {
+  *subdomain_size = N / (world_size - 1)
+  *subdomain_start = *subdomain_size * (world_rank - 1);
+	
+  if (world_rank == world_size - 1) {
+    // Give remainder to last process
+    *subdomain_size += N % world_size;
+  }
+}
+
+void receive_results(int world_size, int *results){
+	int result;
+	for (int partner_rank = 1; partner_rank <= world_size; partner_rank++) {
+		MPI_Recv(&result, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		*results += result
+	}
+}
+
 int main(int argc, char *argv[]) {
+	MPI_Init(NULL, NULL);
+  	int world_size;
+  	MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+  	int world_rank;
+  	MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+	
+	srand(time(NULL) * world_rank);
+	
+	int A[N];
+	int results = 0;
+	int flag = 0;
+	fill_random(&A, N)
+	
+	int subdomain_start, subdomain_size;
+	decompose_domain(N, world_rank, world_size, &subdomain_start, &subdomain_size)
+	
+	int maximum_sends_recvs;	
+	maximum_sends_recvs = N / (world_size - 1) + N % world_size;
+	
+	for (int m = 0; m < maximum_sends_recvs; m++) {
+		if (world_rank == 0) {
+			if (results >= R) {
+				MPI_Bcast(1,1,MPI_INT,0,MPI_COMM_WORLD);
+				printf("process %d is finished\n",world_rank);
+				MPI_Barrier(MPI_Comm communicator)
+				MPI_Finalize();
+    				return 1;
+			}
+			receive_results(world_size, &results)
+    		} else {
+		results += test(subdomain_start + m)
+			if ( m > (R / world_size)) {
+				MPI_Send(&results, MPI_INT, 0, 0, MPI_Comm communicator)
+				results = 0
+				MPI_Iprobe(0, 0, MPI_COMM_WORLD, &flag, &status);
+				if (flag){
+					printf("process %d is finished\n",world_rank);
+					MPI_Barrier(MPI_Comm communicator)
+					MPI_Finalize();
+    					return 1;
+				}
+				
+			}
+			
+		send_result(
+		}
+		      
 	return 0;
 }
