@@ -80,7 +80,7 @@ void receive_results(int world_size, int *results){
 	}
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv) {
 	MPI_Init(NULL, NULL);
   	int world_size;
   	MPI_Comm_size(MPI_COMM_WORLD, &world_size);
