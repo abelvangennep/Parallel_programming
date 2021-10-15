@@ -91,10 +91,10 @@ int main(int argc, char *argv) {
 	
 	MPI_Status status;
 	int* A; 
-	A = &allocate_mem(N);
+	A = allocate_mem(N);
 	int results = 0;
 	int flag = 0;
-	fill_random(&A, N);
+	fill_random(A, N);
 	
 	int subdomain_start, subdomain_size;
 	decompose_domain(N, world_rank, world_size, &subdomain_start, &subdomain_size);
