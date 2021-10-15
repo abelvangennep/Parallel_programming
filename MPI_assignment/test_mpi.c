@@ -89,6 +89,7 @@ int main(int argc, char *argv[]) {
 	
 	srand(time(NULL) * world_rank);
 	
+	MPI_Status status;
 	int A;
 	int results = 0;
 	int flag = 0;
@@ -126,9 +127,6 @@ int main(int argc, char *argv[]) {
 				
 			}
 		}
-			
-	send_result(
-	}
-		      
+	}	      
 	return 0;
 }
