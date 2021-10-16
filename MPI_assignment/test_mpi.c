@@ -109,7 +109,7 @@ int main(int argc, char *argv[]) {
 			for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {
 				MPI_Recv(&local_result, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 				printf("local_result: %d\n", local_result)
-				*results = results + local_result;
+				results += local_result;
 			}
 			printf("m: %d, results: %d",m,results);
     		} else {
