@@ -83,13 +83,17 @@ int main(int argc, char *argv[]) {
 	
 	fill_random(A, N);
 	
+	time_t start = time(NULL);
+	
 	for (int m = 0; m < N; m++) {
 		results += test(A[m]);
 		if (results > R){
 			printf("process is finished at itteration %d\n",m);
 			MPI_Finalize();
+			printf("%.2f\n", (double)(time(NULL) - start));
     			return 0;
 		}
 	}
+	printf("%.2f\n", (double)(time(NULL) - start));
 	return 0;
 }
