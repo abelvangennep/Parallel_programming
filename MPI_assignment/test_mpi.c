@@ -89,15 +89,23 @@ int main(int argc, char *argv[]) {
 	int results = 0;
 	int local_result = 0;
 	int flag = 0;
-	fill_random(A, N);
-	
 	int subdomain_start, subdomain_size;
-	decompose_domain(N, world_rank, world_size, &subdomain_start, &subdomain_size);
-	
-	int maximum_sends_recvs;	
-	maximum_sends_recvs = N / (world_size - 1) + N % world_size;
+	int maximum_sends_recvs;
 	
 	time_t start = time(NULL);
+	
+	decompose_domain(N, world_rank, world_size, &subdomain_start, &subdomain_size);
+	
+	maximum_sends_recvs = N / (world_size - 1) + N % world_size;
+	
+	if (world_rank == 0) {
+		fill_random(A, N);
+		for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
+        		MPI_send(A, N, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
+		}
+	} else {
+		MPI_Recv(&A, N, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+	}
 	
 	for (int m = 0; m < maximum_sends_recvs; m++) {
 		if (world_rank == 0) {
