@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
 		if (world_rank == 0) {
 			if (results >= R) {
 				flag = 1;
-				for (i = 0; i < world_size; i++) {	
+				for (int i = 1 i < world_size; i++) {	
         				MPI_Send(&flag, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
 				}
 				printf("process %d is finished\n",world_rank);
