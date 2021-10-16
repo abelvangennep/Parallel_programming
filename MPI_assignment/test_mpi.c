@@ -75,7 +75,6 @@ void decompose_domain(int N, int world_rank, int world_size, int* subdomain_star
 void receive_results(int world_size, int *results){
 	int result;
 	for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {
-		printf("for-loop: %d\n", partner_rank);
 		MPI_Recv(&result, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 		*results += result;
 	}
@@ -115,6 +114,7 @@ int main(int argc, char *argv[]) {
     				return 1;
 			}
 			receive_results(world_size, &results);
+			printf("m: %d, results: %d",m,d)
     		} else {
 			results += test(subdomain_start + m);
 			MPI_Send(&results, 0, MPI_INT, 0, 0, MPI_COMM_WORLD);
