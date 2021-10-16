@@ -63,5 +63,24 @@ void fill_ascending(int *A, int N) {
 }
 
 int main(int argc, char *argv[]) {
+	if (world_size != 2) {
+    		fprintf(stderr, "World size must be one for %s\n", argv[0]);
+    		MPI_Abort(MPI_COMM_WORLD, 1);
+  	}
+	
+	int* A; 
+	A = allocate_mem(N);
+	int results = 0;
+	
+	fill_random(A, N);
+	
+	for (int m = 0; m < N; m++) {
+		results += test(A[m]);
+		if (results > R){
+			printf("process is finished at itteration %d\n",m);
+			MPI_Finalize();
+    			return 0;
+		}
+	}
 	return 0;
 }
