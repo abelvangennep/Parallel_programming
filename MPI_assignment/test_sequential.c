@@ -86,7 +86,7 @@ int main(int argc, char *argv[]) {
 	time_t start = time(NULL);
 	
 	for (int m = 0; m < N; m++) {
-		if (test(A[m]){
+		if (test(A[m])){
 			results++;
 		}
 // 		results += test(A[m]);
