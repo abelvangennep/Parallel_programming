@@ -130,6 +130,7 @@ int main(int argc, char *argv[]) {
 
 		}
 	}	
+	printf("Did not finish");
 	MPI_Finalize();
 	return 0;
 }
