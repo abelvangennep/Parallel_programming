@@ -100,7 +100,7 @@ int main(int argc, char *argv[]) {
 			if (results >= R) {
 				flag = 1;
 				for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
-        				MPI_Isend(&flag, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
+        				MPI_Isend(&flag, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, MPI_Request);
 				}
 				printf("process %d is finished\n",world_rank);
 				printf("results %d\n", results);
