@@ -75,7 +75,7 @@ void decompose_domain(int N, int world_rank, int world_size, int* subdomain_star
 void receive_results(int world_size, int *results){
 	for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {
 		MPI_Recv(&local_result, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-		*results += result;
+		*results += local_result;
 	}
 }
 
