@@ -97,6 +97,8 @@ int main(int argc, char *argv[]) {
 	int maximum_sends_recvs;	
 	maximum_sends_recvs = N / (world_size - 1) + N % world_size;
 	
+	time_t start = time(NULL);
+	
 	for (int m = 0; m < maximum_sends_recvs; m++) {
 		if (world_rank == 0) {
 			if (results >= R) {
@@ -104,9 +106,12 @@ int main(int argc, char *argv[]) {
 				for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
         				MPI_Isend(&flag, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, &request);
 				}
+				
+				printf("%.2f\n", (double)(time(NULL) - start));
+				MPI_Barrier(MPI_COMM_WORLD);
+				printf("After barrier%.2f\n", (double)(time(NULL) - start));
 				printf("process %d is finished\n",world_rank);
 				printf("results %d\n", results);
-				MPI_Barrier(MPI_COMM_WORLD);
 				MPI_Finalize();
     				return 1;
 			}
@@ -121,8 +126,8 @@ int main(int argc, char *argv[]) {
 			
 			MPI_Iprobe(0, 0, MPI_COMM_WORLD, &flag, &status);
 			if (flag){
-				printf("process %d is finished\n",world_rank);
 				MPI_Barrier(MPI_COMM_WORLD);
+				printf("process %d is finished\n",world_rank);
 				MPI_Finalize();
     				return 1;
 			}
