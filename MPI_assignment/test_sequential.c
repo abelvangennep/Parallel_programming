@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
 	
 	for (int m = 0; m < N; m++) {
 		results += test(A[m]);
-		print("%d\n",results);
+		printf("%d\n",results);
 		
 		if (results > R){
 			printf("process is finished at itteration %d\n",m);
