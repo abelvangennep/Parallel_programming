@@ -99,8 +99,8 @@ int main(int argc, char *argv[]) {
 		if (world_rank == 0) {
 			if (results >= R) {
 				flag = 1;
-				for (int i = 1, i < world_size; i++) {	
-        				MPI_Isend(&flag, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
+				for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
+        				MPI_Isend(&flag, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
 				}
 				printf("process %d is finished\n",world_rank);
 				printf("results %d\n", results);
