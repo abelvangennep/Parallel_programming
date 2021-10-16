@@ -106,7 +106,10 @@ int main(int argc, char *argv[]) {
 				MPI_Finalize();
     				return 1;
 			}
-			receive_results(world_size, &results);
+			for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {
+				MPI_Recv(&local_result, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+				results += local_result;
+			}
 			printf("m: %d, results: %d",m,results);
     		} else {
 			results += test(A[subdomain_start + m]);
