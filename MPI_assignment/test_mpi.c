@@ -128,7 +128,7 @@ int main(int argc, char *argv[]) {
 			MPI_Iprobe(0, 0, MPI_COMM_WORLD, &flag, &status);
 			if (flag){
 				MPI_Barrier(MPI_COMM_WORLD);
-				printf("process %d is finished\n",world_rank);
+				printf("process %d is finished, at itteration %d\n",world_rank, m);
 				MPI_Finalize();
     				return 1;
 			}
