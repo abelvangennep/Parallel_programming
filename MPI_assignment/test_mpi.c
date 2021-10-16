@@ -114,7 +114,7 @@ int main(int argc, char *argv[]) {
     				return 1;
 			}
 			receive_results(world_size, &results);
-			printf("m: %d, results: %d",m,d)
+			printf("m: %d, results: %d",m,results);
     		} else {
 			results += test(subdomain_start + m);
 			MPI_Send(&results, 0, MPI_INT, 0, 0, MPI_COMM_WORLD);
