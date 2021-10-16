@@ -115,7 +115,7 @@ int main(int argc, char *argv[]) {
     		} else {
 			local_result = test(A[subdomain_start + m]);
 			printf("sendresult %d\n", local_result);
-			MPI_Send(&local_result, 0, MPI_INT, 0, 0, MPI_COMM_WORLD);
+			MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
 			local_result = 0;
 			
 			MPI_Iprobe(0, 0, MPI_COMM_WORLD, &flag, &status);
