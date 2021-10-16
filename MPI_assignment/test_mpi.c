@@ -115,17 +115,17 @@ int main(int argc, char *argv[]) {
 			}
 			receive_results(world_size, &results);
     		} else {
-		results += test(subdomain_start + m);
-			if ( m > (R / world_size)) {
-				MPI_Send(&results, 0, MPI_INT, 0, 0, MPI_COMM_WORLD);
-				results = 0;
-				MPI_Iprobe(0, 0, MPI_COMM_WORLD, &flag, &status);
-				if (flag){
-					printf("process %d is finished\n",world_rank);
-					MPI_Barrier(MPI_COMM_WORLD);
-					MPI_Finalize();
-    					return 1;
-				}
+			results += test(subdomain_start + m);
+			MPI_Send(&results, 0, MPI_INT, 0, 0, MPI_COMM_WORLD);
+			results = 0;
+			
+			MPI_Iprobe(0, 0, MPI_COMM_WORLD, &flag, &status);
+			if (flag){
+				printf("process %d is finished\n",world_rank);
+				MPI_Barrier(MPI_COMM_WORLD);
+				MPI_Finalize();
+    				return 1;
+			}
 				
 			}
 		}
