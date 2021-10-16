@@ -73,9 +73,8 @@ void decompose_domain(int N, int world_rank, int world_size, int* subdomain_star
 }
 
 void receive_results(int world_size, int *results){
-	int result;
 	for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {
-		MPI_Recv(&result, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		MPI_Recv(&local_result, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 		*results += result;
 	}
 }
@@ -93,6 +92,7 @@ int main(int argc, char *argv[]) {
 	int* A; 
 	A = allocate_mem(N);
 	int results = 0;
+	int local_result = 0;
 	int flag = 0;
 	fill_random(A, N);
 	
@@ -118,7 +118,7 @@ int main(int argc, char *argv[]) {
     		} else {
 			results += test(A[subdomain_start + m]);
 			printf("sendresult %d\n", results);
-			MPI_Send(&results, 0, MPI_INT, 0, 0, MPI_COMM_WORLD);
+			MPI_Send(results, 0, MPI_INT, 0, 0, MPI_COMM_WORLD);
 			results = 0;
 			
 			MPI_Iprobe(0, 0, MPI_COMM_WORLD, &flag, &status);
