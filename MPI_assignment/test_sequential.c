@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
 		results += test(A[m]);
 		printf("%d\n",results);
 		
-		if (results > R){
+		if (results >= R){
 			printf("process is finished at itteration %d\n",m);
 			MPI_Finalize();
 			printf("%.2f\n", (double)(time(NULL) - start));
