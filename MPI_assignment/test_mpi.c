@@ -108,6 +108,7 @@ int main(int argc, char *argv[]) {
 				int r=1;
 				MPI_Bcast(&r,1,MPI_INT,0,MPI_COMM_WORLD);
 				printf("process %d is finished\n",world_rank);
+				printf("results %d\n", results);
 				MPI_Barrier(MPI_COMM_WORLD);
 				MPI_Finalize();
     				return 1;
@@ -128,6 +129,7 @@ int main(int argc, char *argv[]) {
 				
 			}
 		}
-	}	      
+	}	
+	MPI_Finalize();
 	return 0;
 }
