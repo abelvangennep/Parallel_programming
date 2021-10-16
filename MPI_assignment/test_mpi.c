@@ -5,8 +5,8 @@
 #include <math.h>
 #include "mpi.h"
 
-int N = 500;
-int R = 100;
+int N = 50;
+int R = 10;
 
 int test(int x) {
 	// Transform to a number beween 0 and 2 * pi.
@@ -108,7 +108,8 @@ int main(int argc, char *argv[]) {
 			}
 			for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {
 				MPI_Recv(&local_result, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-				results += local_result;
+				printf("local_result: %d\n", local_result)
+				*results += local_result;
 			}
 			printf("m: %d, results: %d",m,results);
     		} else {
