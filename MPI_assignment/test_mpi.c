@@ -117,7 +117,7 @@ int main(int argc, char *argv[]) {
 			printf("m: %d, results: %d",m,results);
     		} else {
 			results += test(A[subdomain_start + m]);
-			printf("sendresult %d", results)
+			printf("sendresult %d\n", results)
 			MPI_Send(&results, 0, MPI_INT, 0, 0, MPI_COMM_WORLD);
 			results = 0;
 			
