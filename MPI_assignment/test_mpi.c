@@ -121,7 +121,7 @@ int main(int argc, char *argv[]) {
 				printf("process %d is finished\n",world_rank);
 				printf("results %d\n", results);
 				MPI_Finalize();
-    				return 1;
+    				return 0;
 			}
 			for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {
 				MPI_Recv(&local_result, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
@@ -138,7 +138,7 @@ int main(int argc, char *argv[]) {
 				MPI_Barrier(MPI_COMM_WORLD);
 				printf("process %d is finished, at itteration %d\n",world_rank, m);
 				MPI_Finalize();
-    				return 1;
+    				return 0;
 			}
 
 		}
