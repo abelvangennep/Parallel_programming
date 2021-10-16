@@ -98,8 +98,10 @@ int main(int argc, char *argv[]) {
 	for (int m = 0; m < maximum_sends_recvs; m++) {
 		if (world_rank == 0) {
 			if (results >= R) {
-				int r=1;
-				MPI_Bcast(&r,1,MPI_INT,0,MPI_COMM_WORLD);
+				flag = 1
+				for (i = 0; i < world_size; i++) {	
+        				MPI_Send(flag, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
+				}
 				printf("process %d is finished\n",world_rank);
 				printf("results %d\n", results);
 				MPI_Barrier(MPI_COMM_WORLD);
@@ -108,13 +110,10 @@ int main(int argc, char *argv[]) {
 			}
 			for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {
 				MPI_Recv(&local_result, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-				printf("local_result: %d\n", local_result);
 				results += local_result;
 			}
-			printf("m: %d, results: %d",m,results);
     		} else {
 			local_result = test(A[subdomain_start + m]);
-			printf("sendresult %d\n", local_result);
 			MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
 			local_result = 0;
 			
