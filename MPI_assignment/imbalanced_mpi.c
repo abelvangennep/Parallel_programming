@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
 	int local_result = 0;
 	int flag = 0;
 	int step_size = world_size - 1;
-	int start = world_rank - 1;
+	int domain_start = world_rank - 1;
 	
 	time_t start = time(NULL);
 	
@@ -114,7 +114,7 @@ int main(int argc, char *argv[]) {
 				printf("%d\n",results);
 			}
     		} else {
-			local_result = test(A[subdomain_start + m]);
+			local_result = test(A[domain_start + m]);
 			MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
 			local_result = 0;
 			
