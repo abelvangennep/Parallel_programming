@@ -84,9 +84,9 @@ int main(int argc, char *argv[]) {
 		fill_random(A, N);
 		
 		for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
-			printf("1:%d",A[i])
+			printf("1:%d",A[i]);
 			MPI_Send(&A[i], 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
-			printf("2:%d",i)
+			printf("2:%d",i);
 			i++;
 		}
 		while (results < R && i < N) {
@@ -111,7 +111,7 @@ int main(int argc, char *argv[]) {
 	} else {
 		MPI_Status status;
 		while (flag){
-			printf("3")
+			printf("3");
 			MPI_Recv(&a, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 			printf("Received a = %d",a);
 			if (a != -1){
