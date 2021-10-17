@@ -114,9 +114,9 @@ int main(int argc, char *argv[]) {
 		while (flag){
 			printf("start process");
 			MPI_Recv(&a_i, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-			printf("Received a = %d",a);
-			if (a != -1){
-				local_result = test(a);
+			printf("Received a = %d",a_i);
+			if (a_i != -1){
+				local_result = test(a_i);
 				MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
 			} else {
 				flag = 0;
