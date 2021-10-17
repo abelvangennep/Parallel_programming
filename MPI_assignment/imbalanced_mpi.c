@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
 	time_t start = time(NULL);
 	
 	if (world_rank == 0) {
-		fill_random(A, N);
+		fill_random(&A, N);
 		
 		for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
 			MPI_Send(&A[i], 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
