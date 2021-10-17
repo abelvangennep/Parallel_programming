@@ -127,7 +127,42 @@ int main(int argc, char *argv[]) {
 			}
 
 		}
-	}	
+	}
+	for (int k = 1; k <= N % step_size; k++) {
+		if (world_rank == 0) {
+			if (results >= R) {
+				flag = 1;
+				for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
+        				MPI_Isend(&flag, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, &request);
+				}
+	
+				MPI_Barrier(MPI_COMM_WORLD);
+				printf("After barrier%.2f\n", (double)(time(NULL) - start));
+				printf("process %d is finished\n",world_rank);
+				printf("results %d\n", results);
+				MPI_Finalize();
+    				return 0;
+			}
+			for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {
+				MPI_Recv(&local_result, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+				results += local_result;
+				printf("%d\n",results);
+			}
+    		} else if (world_rank == k){
+			local_result = test(A[domain_start + m]);
+			MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
+			local_result = 0;
+			
+			MPI_Iprobe(0, 0, MPI_COMM_WORLD, &flag, &status);
+			if (flag){
+				MPI_Barrier(MPI_COMM_WORLD);
+				printf("process %d is finished, at itteration %d\n",world_rank, m);
+				MPI_Finalize();
+    				return 0;
+			}
+
+		}
+	}
 	printf("Did not finish");
 	MPI_Finalize();
 	return 0;
