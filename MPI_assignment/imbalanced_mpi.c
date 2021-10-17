@@ -100,7 +100,7 @@ int main(int argc, char *argv[]) {
 			}
 		}
 		for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
-			flag = -1
+			flag = -1;
 			MPI_Send(&flag, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
 		}
 		MPI_Barrier(MPI_COMM_WORLD);
