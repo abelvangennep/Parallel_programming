@@ -86,6 +86,7 @@ int main(int argc, char *argv[]) {
 		fill_random(A, N);
 
 		for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
+			printf("A[i]: %d\n", A[i])
 			MPI_Send(&A[i], 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
 			i++;
 		}
