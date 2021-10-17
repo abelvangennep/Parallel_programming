@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
 	A = allocate_mem(N);
 	int results = 0, local_result;
 	int a;
-	int flag = -1;
+	int flag = 1, finished = 0;
 	int i = 0;
 	
 	time_t start = time(NULL);
@@ -84,7 +84,9 @@ int main(int argc, char *argv[]) {
 		fill_random(A, N);
 		
 		for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
+			printf("1:%d",A[i])
 			MPI_Send(&A[i], 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
+			printf("2:%d",i)
 			i++;
 		}
 		while (results < R && i < N) {
@@ -93,6 +95,7 @@ int main(int argc, char *argv[]) {
 			MPI_Iprobe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &message_received, &status);
 			
 			if (message_received) {
+				printf("1")
 				MPI_Recv(&local_result, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD, &status);
 				MPI_Send(&A[i], 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD);
 				i++;
@@ -106,7 +109,9 @@ int main(int argc, char *argv[]) {
 		printf("After barrier%.2f\n", (double)(time(NULL) - start));
 		printf("found at i = %d",i);
 	} else {
+		MPI_Status status;
 		while (flag){
+			printf("3")
 			MPI_Recv(&a, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 			printf("Received a = %d",a);
 			if (a != -1){
