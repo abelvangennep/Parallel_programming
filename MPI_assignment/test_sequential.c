@@ -70,8 +70,6 @@ int main(int argc, char *argv[]) {
   	int world_rank;
   	MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
 	
-	srand(time(NULL) * world_rank);
-	
 	if (world_size != 1) {
     		fprintf(stderr, "World size must be one for %s\n", argv[0]);
     		MPI_Abort(MPI_COMM_WORLD, 1);
