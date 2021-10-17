@@ -83,17 +83,15 @@ int main(int argc, char *argv[]) {
 	time_t start = time(NULL);
 	printf("1: %d", world_rank);
 	if (world_rank == 0) {
-		printf("2");
 		fill_random(A, N);
-		printf("3");
 		for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
-			printf("A[i]: %d\n", A[i]);
 			MPI_Send(&A[i], 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
-			printf("A[i]: %d\n", A[i]);
 			i++;
 		}
+		int message_received = 1;
+		
 		while (results < R && i < N) {
-			int message_received;
+			
 			MPI_Status status;
 			MPI_Iprobe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &message_received, &status);
 			
