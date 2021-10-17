@@ -81,6 +81,7 @@ int main(int argc, char *argv[]) {
 	int flag = 0;
 	int step_size = world_size - 1;
 	int domain_start = world_rank - 1;
+	int m;
 	
 	time_t start = time(NULL);
 	
@@ -93,7 +94,7 @@ int main(int argc, char *argv[]) {
 		MPI_Recv(A, N, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 	}
 	
-	for (int m = 0; m < N; m += step_size) {
+	for (m = 0; m < N; m += step_size) {
 		if (world_rank == 0) {
 			if (results >= R) {
 				flag = 1;
@@ -149,7 +150,7 @@ int main(int argc, char *argv[]) {
 				printf("%d\n",results);
 			}
     		} else if (world_rank == k){
-			local_result = test(A[domain_start + m]);
+			local_result = test(A[domain_start + m + k]);
 			MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
 			local_result = 0;
 			
