@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
 	
 	
 	time_t start = time(NULL);
-	printf("20: %d\n", world_size);
+	printf("20: %d\n", world_rank);
 	
 	if (world_rank == 0) {
 		printf("30\n");
