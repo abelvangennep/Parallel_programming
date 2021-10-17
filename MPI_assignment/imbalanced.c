@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
 		}
 		for (int m; m < N; m++) {
 			MPI_Status status;
-			MPI_Iprobe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &message_received, &status);
+			MPI_Probe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &message_received, &status);
 			
 			if (message_received) {
 				printf("message reveiced");
