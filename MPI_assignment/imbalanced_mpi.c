@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
 			MPI_Iprobe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &message_received, &status);
 			
 			if (message_received) {
-				printf("1");
+				printf("message reveiced");
 				MPI_Recv(&local_result, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD, &status);
 				MPI_Send(&A[i], 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD);
 				i++;
@@ -112,10 +112,9 @@ int main(int argc, char *argv[]) {
 		MPI_Finalize();
 		return 0;
 	} else {
-		MPI_Status status;
 		while (flag){
-			printf("3");
-			MPI_Recv(a, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+			printf("start process");
+			MPI_Recv(&a, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 			printf("Received a = %d",a);
 			if (a != -1){
 				local_result = test(a);
