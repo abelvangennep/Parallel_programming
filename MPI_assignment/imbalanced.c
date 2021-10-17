@@ -70,19 +70,20 @@ int main(int argc, char *argv[]) {
   	int world_rank;
   	MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
 	
-	  MPI_Status status;
-	  MPI_Request request;
+	MPI_Status status;
+	MPI_Request request;
 	
-	  int* A; 
-	  A = allocate_mem(N);
-	  int results = 0, local_result = 0, flag = 0, i = 0;
+	int* A; 
+	A = allocate_mem(N);
+	int results = 0, local_result = 0, flag = 0, i = 0;
 	
-	  time_t start = time(NULL);
+	time_t start = time(NULL);
 	
-	
-	  if (world_rank == 0) {
+	printf("1");
+	if (world_rank == 0) {
       		fill_random(A, N);
 		for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
+			printf("2");
 			MPI_Send(&A[i], 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
 			i++;
 		 }
