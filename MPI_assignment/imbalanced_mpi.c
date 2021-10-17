@@ -69,13 +69,12 @@ int main(int argc, char *argv[]) {
   	int world_rank;
   	MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
 	
-	MPI_Status status;
 	MPI_Request request;
 
 	int* A; 
 	A = allocate_mem(N);
 	int results = 0, local_result;
-	int a;
+	int a_i;
 	int flag = 1, finished = 0;
 	int i = 0;
 	
@@ -114,7 +113,7 @@ int main(int argc, char *argv[]) {
 	} else {
 		while (flag){
 			printf("start process");
-			MPI_Recv(&a, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+			MPI_Recv(&a_i, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 			printf("Received a = %d",a);
 			if (a != -1){
 				local_result = test(a);
