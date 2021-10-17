@@ -89,20 +89,16 @@ int main(int argc, char *argv[]) {
        		 int message_received = 1;
 		
 		  while (results < R && i < N) {
+			  MPI_Status status;
+			  MPI_Iprobe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &message_received, &status);
 			
-			    MPI_Status status;
-			    MPI_Iprobe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &message_received, &status);
-			
-			    if (message_received) {
-				    printf("message reveiced");
-				    MPI_Recv(&local_result, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD, &status);
-				    MPI_Send(&A[i], 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD);
-				    i++;
-				    results += local_result;
-          }
-			}
-    } else {
-      continue;
-    }
-    
+			  if (message_received) {    
+				  printf("message reveiced");
+				  MPI_Recv(&local_result, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD, &status);
+				  MPI_Send(&A[i], 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD);
+				  i++;
+				  results += local_result;
+			 }
+		}
+	}
 }
