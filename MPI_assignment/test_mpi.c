@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
 	maximum_sends_recvs = N / (world_size - 1) + N % world_size;
 	
 	if (world_rank == 0) {
-		fill_ascending(A, N);
+		fill_random(A, N);
 		
 		for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
         		MPI_Send(A, N, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
