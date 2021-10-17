@@ -63,7 +63,7 @@ void fill_ascending(int *A, int N) {
 }
 
 int main(int argc, char *argv[]) {
-	print("1")
+	printf("1");
 	MPI_Init(NULL, NULL);
   	int world_size;
   	MPI_Comm_size(MPI_COMM_WORLD, &world_size);
