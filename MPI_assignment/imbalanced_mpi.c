@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
 	
 	
 	time_t start = time(NULL);
-	printf("1: %d", world_rank)
+	printf("1: %d", world_rank);
 	if (world_rank == 0) {
 		printf("2")
 		fill_random(A, N);
