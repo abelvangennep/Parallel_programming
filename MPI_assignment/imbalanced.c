@@ -63,7 +63,7 @@ void fill_ascending(int *A, int N) {
 }
 
 int main(int argc, char *argv[]) {
-	  MPI_Init(NULL, NULL);
+	MPI_Init(NULL, NULL);
   	int world_size;
   	MPI_Comm_size(MPI_COMM_WORLD, &world_size);
 	
@@ -81,14 +81,14 @@ int main(int argc, char *argv[]) {
 	
 	
 	  if (world_rank == 0) {
-      fill_random(A, N);
-		  for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
-			  MPI_Send(&A[i], 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
-			  i++;
-		  }
-        int message_received = 1;
+      		fill_random(A, N);
+		for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
+			MPI_Send(&A[i], 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
+			i++;
+		 }
+       		 int message_received = 1;
 		
-		    while (results < R && i < N) {
+		  while (results < R && i < N) {
 			
 			    MPI_Status status;
 			    MPI_Iprobe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &message_received, &status);
@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
           }
 			}
     } else {
-      pass
+      pass;
     }
     
 }
