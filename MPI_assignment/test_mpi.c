@@ -63,34 +63,30 @@ void fill_ascending(int *A, int N) {
 }
 
 void decompose_domain(int N, int world_rank, int world_size, int* subdomain_start, int* subdomain_size) {
-  *subdomain_size = N / (world_size - 1);
-  *subdomain_start = *subdomain_size * (world_rank - 1);
+  	*subdomain_size = N / (world_size - 1);
+  	*subdomain_start = *subdomain_size * (world_rank - 1);
 	
-  if (world_rank == world_size - 1) {
-    // Give remainder to last process
-    *subdomain_size += N % world_size;
-  }
+  	if (world_rank == world_size - 1) {
+    		// Give remainder to last process
+    		*subdomain_size += N % world_size;
+  	}
 }
 
 int main(int argc, char *argv[]) {
 	MPI_Init(NULL, NULL);
   	int world_size;
   	MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+	
   	int world_rank;
   	MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
-	
-	srand(time(NULL) * world_rank);
 	
 	MPI_Status status;
 	MPI_Request request;
 	
 	int* A; 
 	A = allocate_mem(N);
-	int results = 0;
-	int local_result = 0;
-	int flag = 0;
-	int subdomain_start, subdomain_size;
-	int maximum_sends_recvs;
+	int results = 0, local_result = 0, flag = 0;
+	int subdomain_start, subdomain_size, maximum_sends_recvs;
 	
 	time_t start = time(NULL);
 	
@@ -100,6 +96,7 @@ int main(int argc, char *argv[]) {
 	
 	if (world_rank == 0) {
 		fill_random(A, N);
+		
 		for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
         		MPI_Send(A, N, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
 		}
@@ -111,30 +108,35 @@ int main(int argc, char *argv[]) {
 		if (world_rank == 0) {
 			if (results >= R) {
 				flag = 1;
+				
 				for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
         				MPI_Isend(&flag, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, &request);
 				}
 				
-				printf("%.2f\n", (double)(time(NULL) - start));
 				MPI_Barrier(MPI_COMM_WORLD);
+				
 				printf("After barrier%.2f\n", (double)(time(NULL) - start));
 				printf("process %d is finished\n",world_rank);
 				printf("results %d\n", results);
+				
 				MPI_Finalize();
     				return 0;
 			}
 			for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {
 				MPI_Recv(&local_result, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+				
 				results += local_result;
-				printf("%d\n",results);
 			}
     		} else {
 			local_result = test(A[subdomain_start + m]);
+			
 			MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
+			
 			local_result = 0;
 			
 			MPI_Iprobe(0, 0, MPI_COMM_WORLD, &flag, &status);
-			if (flag){
+			
+			if (flag) {
 				MPI_Barrier(MPI_COMM_WORLD);
 				printf("process %d is finished, at itteration %d\n",world_rank, m);
 				MPI_Finalize();
@@ -143,6 +145,7 @@ int main(int argc, char *argv[]) {
 
 		}
 	}	
+	
 	printf("Did not finish");
 	MPI_Finalize();
 	return 0;
