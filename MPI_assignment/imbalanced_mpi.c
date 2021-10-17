@@ -69,8 +69,6 @@ int main(int argc, char *argv[]) {
   	int world_rank;
   	MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
 	
-	srand(time(NULL) * world_rank);
-	
 	MPI_Status status;
 	MPI_Request request;
 	
