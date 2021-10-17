@@ -112,7 +112,6 @@ int main(int argc, char *argv[]) {
 			for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {
 				MPI_Recv(&local_result, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 				results += local_result;
-				printf("%d\n",results);
 			}
     		} else {
 			local_result = test(A[domain_start + m]);
@@ -147,7 +146,6 @@ int main(int argc, char *argv[]) {
 			for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {
 				MPI_Recv(&local_result, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 				results += local_result;
-				printf("%d\n",results);
 			}
     		} else if (world_rank == k){
 			local_result = test(A[domain_start + m + k]);
