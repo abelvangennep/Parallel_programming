@@ -69,98 +69,54 @@ int main(int argc, char *argv[]) {
   	int world_rank;
   	MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
 	
-	MPI_Status status;
 	MPI_Request request;
 	
 	int* A; 
 	A = allocate_mem(N);
 	int results = 0;
-	int local_result = 0;
+	int a;
 	int flag = 0;
-	int step_size = world_size - 1;
-	int domain_start = world_rank - 1;
-	int m;
+	int i = 0;
 	
 	time_t start = time(NULL);
 	
 	if (world_rank == 0) {
-		fill_ascending(A, N);
+		fill_random(A, N);
+		
 		for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
-        		MPI_Send(A, N, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
+			MPI_Send(A[i], 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
+			i++;
 		}
+		while (results < R && i < N) {
+			int message_received;
+			MPI_Status status;
+			MPI_Iprobe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &message_received, &status);
+			
+			if (message_received) {
+				MPI_Recv(&local_result, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD, &status);
+				MPI_Send(A[i], 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD);
+				i++;
+				results += local_result;
+			}
+		}
+		MPI_Send(-1, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD);
+		
+		MPI_Barrier(MPI_COMM_WORLD);
+		printf("After barrier%.2f\n", (double)(time(NULL) - start));
+		printf("found at i = %d",i)
 	} else {
-		MPI_Recv(A, N, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-	}
-	
-	for (m = 0; m < N; m += step_size) {
-		if (world_rank == 0) {
-			if (results >= R) {
+		while (flag){
+			MPI_Recv(&a, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+			if (a != -1){
+				local_result = test(a);
+				MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
+			} else {
 				flag = 1;
-				for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
-        				MPI_Isend(&flag, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, &request);
-				}
-	
-				MPI_Barrier(MPI_COMM_WORLD);
-				printf("After barrier%.2f\n", (double)(time(NULL) - start));
-				printf("process %d is finished\n",world_rank);
-				printf("results %d\n", results);
-				MPI_Finalize();
-    				return 0;
 			}
-			for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {
-				MPI_Recv(&local_result, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-				results += local_result;
-			}
-    		} else {
-			local_result = test(A[domain_start + m]);
-			MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
-			local_result = 0;
-			
-			MPI_Iprobe(0, 0, MPI_COMM_WORLD, &flag, &status);
-			if (flag){
-				MPI_Barrier(MPI_COMM_WORLD);
-				printf("process %d is finished, at itteration %d\n",world_rank, m);
-				MPI_Finalize();
-    				return 0;
-			}
-
 		}
+		MPI_Barrier(MPI_COMM_WORLD);
 	}
-	for (int k = 1; k <= N % step_size; k++) {
-		if (world_rank == 0) {
-			if (results >= R) {
-				flag = 1;
-				for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
-        				MPI_Isend(&flag, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, &request);
-				}
 	
-				MPI_Barrier(MPI_COMM_WORLD);
-				printf("After barrier%.2f\n", (double)(time(NULL) - start));
-				printf("process %d is finished\n",world_rank);
-				printf("results %d\n", results);
-				MPI_Finalize();
-    				return 0;
-			}
-			for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {
-				MPI_Recv(&local_result, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-				results += local_result;
-			}
-    		} else if (world_rank == k){
-			local_result = test(A[domain_start + m + k]);
-			MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
-			local_result = 0;
-			
-			MPI_Iprobe(0, 0, MPI_COMM_WORLD, &flag, &status);
-			if (flag){
-				MPI_Barrier(MPI_COMM_WORLD);
-				printf("process %d is finished, at itteration %d\n",world_rank, m);
-				MPI_Finalize();
-    				return 0;
-			}
-
-		}
-	}
-	printf("Did not finish");
 	MPI_Finalize();
 	return 0;
 }
