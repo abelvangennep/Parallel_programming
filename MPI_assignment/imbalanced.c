@@ -87,12 +87,16 @@ int main(int argc, char *argv[]) {
 			i++;
 		}
 	} else {
-		printf("start process");
-		MPI_Recv(&a_i, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-		printf("Received a = %d",a_i);
-		if (a_i != -1){
-			local_result = test(a_i);
-			MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
+		while (flag){
+			printf("start process");
+			MPI_Recv(&a_i, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+			printf("Received a = %d",a_i);
+			if (a_i != -1){
+				local_result = test(a_i);
+				MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
+			} else {
+				flag = 0;
+			}
 		}
 	}
 	MPI_Finalize();
