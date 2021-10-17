@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
 	
 	int* A; 
 	A = allocate_mem(N);
-	int results = 0;
+	int results = 0, local_result;
 	int a;
 	int flag = 0;
 	int i = 0;
@@ -100,7 +100,8 @@ int main(int argc, char *argv[]) {
 			}
 		}
 		for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
-			MPI_Send(-1, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
+			flag = -1
+			MPI_Send(&flag, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
 		}
 		MPI_Barrier(MPI_COMM_WORLD);
 		printf("After barrier%.2f\n", (double)(time(NULL) - start));
