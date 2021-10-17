@@ -5,8 +5,8 @@
 #include <math.h>
 #include "mpi.h"
 
-int N = 500;
-int R = 100;
+int N = 50;
+int R = 10;
 
 int test(int x) {
 	// Transform to a number beween 0 and 2 * pi.
@@ -109,6 +109,7 @@ int main(int argc, char *argv[]) {
 	} else {
 		while (flag){
 			MPI_Recv(&a, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+			printf("Received a = %d",a);
 			if (a != -1){
 				local_result = test(a);
 				MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
