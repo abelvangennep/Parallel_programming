@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
 		fill_random(A, N);
 		
 		for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
-			MPI_Send(A[i], 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
+			MPI_Send(&A[i], 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
 			i++;
 		}
 		while (results < R && i < N) {
@@ -94,16 +94,17 @@ int main(int argc, char *argv[]) {
 			
 			if (message_received) {
 				MPI_Recv(&local_result, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD, &status);
-				MPI_Send(A[i], 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD);
+				MPI_Send(&A[i], 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD);
 				i++;
 				results += local_result;
 			}
 		}
-		MPI_Send(-1, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD);
-		
+		for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
+			MPI_Send(-1, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
+		}
 		MPI_Barrier(MPI_COMM_WORLD);
 		printf("After barrier%.2f\n", (double)(time(NULL) - start));
-		printf("found at i = %d",i)
+		printf("found at i = %d",i);
 	} else {
 		while (flag){
 			MPI_Recv(&a, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
