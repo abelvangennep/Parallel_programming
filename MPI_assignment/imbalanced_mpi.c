@@ -115,7 +115,7 @@ int main(int argc, char *argv[]) {
 		MPI_Status status;
 		while (flag){
 			printf("3");
-			MPI_Recv(&a, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+			MPI_Recv(a, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 			printf("Received a = %d",a);
 			if (a != -1){
 				local_result = test(a);
