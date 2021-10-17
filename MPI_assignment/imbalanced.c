@@ -81,7 +81,11 @@ int main(int argc, char *argv[]) {
 	
 	printf("1");
 	if (world_rank == 0) {
-      		printf("2");
+      		fill_random(A, N);
+		for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
+			MPI_Send(&A[i], 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
+			i++;
+		}
 	} else {
 		printf("Hello, World\n");
 	}
