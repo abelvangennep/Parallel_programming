@@ -86,19 +86,43 @@ int main(int argc, char *argv[]) {
 			MPI_Send(&A[i], 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
 			i++;
 		}
+		for (int m; m < N; m++) {
+			MPI_Status status;
+			MPI_Iprobe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &message_received, &status);
+			
+			if (message_received) {
+				printf("message reveiced");
+				MPI_Recv(&local_result, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD, &status);
+				if ( results >= R || i - 1 >= N) {
+					for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
+						int flag = -1
+						MPI_Send(&flag, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
+					}
+					printf("After barrier%.2f\n", (double)(time(NULL) - start));
+					printf("found at i = %d",i);
+					MPI_Finalize();
+					return 0;
+				}
+				
+				MPI_Send(&A[i], 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD);
+				i++;
+				results += local_result;
+			}
+			
+		}
 	} else {
 		for (int m; m < N; m++) {
 			printf("start process");
 			MPI_Recv(&a_i, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 			printf("Received a = %d",a_i);
-			break;
+			
 			if (a_i != -1){
 				local_result = test(a_i);
 				MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
 			} else {
-				break;
+				MPI_Finalize();
+				return 0;
 			}
-			
 		}
 	}
 	MPI_Finalize();
