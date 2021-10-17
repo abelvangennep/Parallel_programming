@@ -69,8 +69,9 @@ int main(int argc, char *argv[]) {
   	int world_rank;
   	MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
 	
+	MPI_Status status;
 	MPI_Request request;
-	
+	printf("10\n");
 	int* A; 
 	A = allocate_mem(N);
 	int results = 0, local_result;
@@ -78,11 +79,14 @@ int main(int argc, char *argv[]) {
 	int flag = 1, finished = 0;
 	int i = 0;
 	
+	
 	time_t start = time(NULL);
+	printf("20: %d\n", world_size);
 	
 	if (world_rank == 0) {
+		printf("30\n");
 		fill_random(A, N);
-		
+		printf("40");
 		for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
 			printf("1:%d",A[i]);
 			MPI_Send(&A[i], 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
