@@ -101,6 +101,8 @@ int main(int argc, char *argv[]) {
 				  results += local_result;
 			 }
 		}
+	} else {
+		printf("Hello, World\n");
 	}
 	MPI_Finalize();
 	return 0;
