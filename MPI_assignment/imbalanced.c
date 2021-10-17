@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
 	
 	int* A; 
 	A = allocate_mem(N);
-	int results = 0, local_result = 0, flag = 0, i = 0, a_i;
+	int results = 0, local_result = 0, flag = 1, i = 0, a_i;
 	
 	time_t start = time(NULL);
 	
