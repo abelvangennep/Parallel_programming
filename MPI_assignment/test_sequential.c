@@ -79,12 +79,12 @@ int main(int argc, char *argv[]) {
 	A = allocate_mem(N);
 	int results = 0;
 	
-	fill_random(A, N);
+	fill_ascending(A, N);
 	
 	time_t start = time(NULL);
 	
 	for (int m = 0; m < N; m++) {
-		if (test(A[m])){
+		if (test_imbalanced(A[m])){
 			results++;
 		}
 // 		results += test(A[m]);
