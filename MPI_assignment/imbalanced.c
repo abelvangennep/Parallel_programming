@@ -81,26 +81,7 @@ int main(int argc, char *argv[]) {
 	
 	printf("1");
 	if (world_rank == 0) {
-      		fill_random(A, N);
-		for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
-			printf("2");
-			MPI_Send(&A[i], 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
-			i++;
-		 }
-       		 int message_received = 1;
-		
-		  while (results < R && i < N) {
-			  MPI_Status status;
-			  MPI_Iprobe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &message_received, &status);
-			
-			  if (message_received) {    
-				  printf("message reveiced");
-				  MPI_Recv(&local_result, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD, &status);
-				  MPI_Send(&A[i], 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD);
-				  i++;
-				  results += local_result;
-			 }
-		}
+      		printf("2");
 	} else {
 		printf("Hello, World\n");
 	}
