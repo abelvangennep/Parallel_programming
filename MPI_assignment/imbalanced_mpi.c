@@ -75,13 +75,13 @@ int main(int argc, char *argv[]) {
 	A = allocate_mem(N);
 	int results = 0, local_result;
 	int a;
-	int flag = 0;
+	int flag = -1;
 	int i = 0;
 	
 	time_t start = time(NULL);
 	
 	if (world_rank == 0) {
-		fill_random(&A, N);
+		fill_random(A, N);
 		
 		for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
 			MPI_Send(&A[i], 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
@@ -100,7 +100,6 @@ int main(int argc, char *argv[]) {
 			}
 		}
 		for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
-			flag = -1;
 			MPI_Send(&flag, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
 		}
 		MPI_Barrier(MPI_COMM_WORLD);
@@ -114,7 +113,7 @@ int main(int argc, char *argv[]) {
 				local_result = test(a);
 				MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
 			} else {
-				flag = 1;
+				flag = 0;
 			}
 		}
 		MPI_Barrier(MPI_COMM_WORLD);
