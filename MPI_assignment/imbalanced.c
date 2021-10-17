@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
 	
 	int* A; 
 	A = allocate_mem(N);
-	int results = 0, local_result = 0, flag = 1, i = 0, a_i;
+	int results = 0, local_result = 0, i = 0, a_i;
 	
 	time_t start = time(NULL);
 	
@@ -87,16 +87,18 @@ int main(int argc, char *argv[]) {
 			i++;
 		}
 	} else {
-		while (flag){
+		for (int m; m < N; m++) {
 			printf("start process");
 			MPI_Recv(&a_i, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 			printf("Received a = %d",a_i);
+			break;
 			if (a_i != -1){
 				local_result = test(a_i);
 				MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
 			} else {
-				flag = 0;
+				break;
 			}
+			
 		}
 	}
 	MPI_Finalize();
