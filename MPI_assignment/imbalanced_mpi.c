@@ -63,7 +63,6 @@ void fill_ascending(int *A, int N) {
 }
 
 int main(int argc, char *argv[]) {
-	printf("1");
 	MPI_Init(NULL, NULL);
   	int world_size;
   	MPI_Comm_size(MPI_COMM_WORLD, &world_size);
@@ -78,7 +77,7 @@ int main(int argc, char *argv[]) {
 	int a_i;
 	int flag = 1, finished = 0;
 	int i = 0;
-	
+	printf("1");
 	
 	time_t start = time(NULL);
 	printf("1: %d", world_rank);
