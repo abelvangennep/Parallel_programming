@@ -5,8 +5,8 @@
 #include <math.h>
 #include "mpi.h"
 
-int N = 2500;
-int R = 500;
+int N = 500;
+int R = 100;
 
 int test(int x) {
 	// Transform to a number beween 0 and 2 * pi.
@@ -88,8 +88,6 @@ int main(int argc, char *argv[]) {
 	int results = 0, local_result = 0, flag = 0;
 	int subdomain_start, subdomain_size, maximum_sends_recvs;
 	
-	time_t start = time(NULL);
-	
 	decompose_domain(N, world_rank, world_size, &subdomain_start, &subdomain_size);
 	
 	maximum_sends_recvs = N / (world_size - 1) + N % world_size;
@@ -104,6 +102,7 @@ int main(int argc, char *argv[]) {
 		MPI_Recv(A, N, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 	}
 	
+	time_t start = time(NULL);
 	for (int m = 0; m < maximum_sends_recvs; m++) {
 		if (world_rank == 0) {
 			if (results >= R) {
