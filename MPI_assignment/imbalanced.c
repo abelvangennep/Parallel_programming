@@ -5,8 +5,8 @@
 #include <math.h>
 #include "mpi.h"
 
-int N = 50;
-int R = 10;
+int N = 500;
+int R = 100;
 
 int test(int x) {
 	// Transform to a number beween 0 and 2 * pi.
@@ -79,26 +79,25 @@ int main(int argc, char *argv[]) {
 	
 	time_t start = time(NULL);
 	
-	printf("1");
 	if (world_rank == 0) {
       		fill_random(A, N);
 		for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
 			MPI_Send(&A[i], 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
 			i++;
 		}
+		time_t start = time(NULL);
 		for (int m; m < N; m++) {
 			MPI_Status status;
 			MPI_Probe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &status);
 	
-			printf("message reveiced");
 			MPI_Recv(&local_result, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD, &status);
 			if ( results >= R || i - 1 >= N) {
 				for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
 					int flag = -1;
 					MPI_Send(&flag, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
 				}
+				MPI_Barrier(MPI_COMM_WORLD);
 				printf("After barrier%.2f\n", (double)(time(NULL) - start));
-				printf("found at i = %d",i);
 				MPI_Finalize();
 				return 0;
 			}
@@ -109,14 +108,13 @@ int main(int argc, char *argv[]) {
 		}
 	} else {
 		for (int m; m < N; m++) {
-			printf("start process");
 			MPI_Recv(&a_i, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-			printf("Received a = %d",a_i);
 			
 			if (a_i != -1){
 				local_result = test(a_i);
 				MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
 			} else {
+				MPI_Barrier(MPI_COMM_WORLD);
 				MPI_Finalize();
 				return 0;
 			}
