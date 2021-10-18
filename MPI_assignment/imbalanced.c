@@ -91,13 +91,14 @@ int main(int argc, char *argv[]) {
 			MPI_Probe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &status);
 	
 			MPI_Recv(&local_result, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD, &status);
-			if ( results >= R || i - 1 >= N) {
+			if ( results >= R) {
 				for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
 					int flag = -1;
 					MPI_Send(&flag, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
 				}
 				MPI_Barrier(MPI_COMM_WORLD);
 				printf("After barrier%.2f\n", (double)(time(NULL) - start));
+				printf("at itteration:",m);
 				MPI_Finalize();
 				return 0;
 			}
