@@ -98,7 +98,7 @@ int main(int argc, char *argv[]) {
 				}
 				MPI_Barrier(MPI_COMM_WORLD);
 				printf("After barrier%.2f\n", (double)(time(NULL) - start));
-				printf("at itteration:",m);
+				printf("at itteration:%d\n",m);
 				MPI_Finalize();
 				return 0;
 			}
