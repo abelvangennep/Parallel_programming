@@ -122,11 +122,11 @@ int main(int argc, char *argv[]) {
 		}
 		MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
 		local_result = 0;
-		for (int m; m < N; m++) {
-			MPI_Recv(&m, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		for (int k; k < N; k++) {
+			MPI_Recv(&i, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 			
 			if (a_i != -1){
-				local_result += test(A[m]);
+				local_result += test(A[i]);
 				MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
 				local_result = 0;
 			} else {
