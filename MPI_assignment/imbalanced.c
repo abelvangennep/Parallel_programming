@@ -119,7 +119,7 @@ int main(int argc, char *argv[]) {
 					MPI_Finalize();
 					return 0;
 				}
-				MPI_Send(&m, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD);
+				MPI_Isend(&m, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD, &send_req);
 				
 				m += chunk_size;
 			} else {
