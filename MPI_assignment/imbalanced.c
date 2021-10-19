@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
 	MPI_Request recv_req;
 	
 	
-	int i, j, results = 0, local_result = 0, message_received = 0, chunk_size = 5, start_chunk = 200;
+	int i, j, results = 0, local_result = 0, message_received = 0, chunk_size = 2, start_chunk = 200;
 	int* A; 
 	A = allocate_mem(N);
 	
