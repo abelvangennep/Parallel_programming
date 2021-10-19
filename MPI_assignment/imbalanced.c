@@ -100,7 +100,7 @@ int main(int argc, char *argv[]) {
 			MPI_Iprobe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &message_received, &status);
 			if (message_received) {
 				MPI_Recv(&local_result, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD, &status);
-
+				results += local_result;
 				if ( results >= R) {
 					printf("Before barrier%.2f\n", (double)(time(NULL) - start));
 					for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
@@ -115,7 +115,7 @@ int main(int argc, char *argv[]) {
 					return 0;
 				}
 				MPI_Send(&m, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD);
-				results += local_result;
+				
 				m += chuck_size;
 			} else {
 				results += test_imbalanced(A[m]);
