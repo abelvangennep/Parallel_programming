@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
 		fill_ascending(A, N);
 		
 		for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
-        		MPI_Send(A, N, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
+        		MPI_Send(A, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
 		}
 	} else {
 		MPI_Recv(A, N, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
