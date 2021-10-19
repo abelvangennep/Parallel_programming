@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
 	
 	
 	int results = 0, local_result = 0, message_received = 0, chuck_size = 5;
-	int i = (world_rank-1)*chuck_size
+	int i = (world_rank-1)*chuck_size;
 	int* A; 
 	A = allocate_mem(N);
 	
@@ -97,7 +97,7 @@ int main(int argc, char *argv[]) {
 		do {
 			MPI_Status status;
 
-			MPI_IProbe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &message_received, &status);
+			MPI_Iprobe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &message_received, &status);
 			if (message_received) {
 				MPI_Recv(&local_result, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD, &status);
 
