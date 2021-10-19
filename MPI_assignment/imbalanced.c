@@ -116,7 +116,7 @@ int main(int argc, char *argv[]) {
 				results += local_result;
 				m += chuck_size;
 			} else {
-				results += test(A[m]);
+				results += test_imbalanced(A[m]);
 				m++;
 			}
 		} while (m < N);
@@ -124,7 +124,7 @@ int main(int argc, char *argv[]) {
 		do {
 			local_result = 0;
 			for (int l= 0; l < chuck_size; l++) {
-				local_result += test(A[l+i]);
+				local_result += test_imbalanced(A[l+i]);
 			}
 			
 			MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
