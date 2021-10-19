@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
 		for (int l = 0; l < 5; l++) {
 			results += test(A[l]);
 		}
-		int m = worl_size * 5
+		int m = world_size * 5;
 			
 		for (m; m < N; m += 5) {
 			MPI_Status status;
@@ -118,7 +118,7 @@ int main(int argc, char *argv[]) {
 		}
 	} else {
 		for (int l; l < 5; l++) {
-			local_result += test(a[l+world_rank*5]);
+			local_result += test(A[l+world_rank*5]);
 		}
 		MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
 		local_result = 0;
