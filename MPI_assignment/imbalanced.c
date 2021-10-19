@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
 	MPI_Request request;
 	
 	
-	int results = 0, local_result = 0, message_received = 0, chunk_size = 3, start_chunk = 200;
+	int i, results = 0, local_result = 0, message_received = 0, chunk_size = 3, start_chunk = 200;
 	int* A; 
 	A = allocate_mem(N);
 	
@@ -115,14 +115,14 @@ int main(int argc, char *argv[]) {
 				}
 				MPI_Send(&m, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD);
 				
-				m += chuck_size;
+				m += chunk_size;
 			} else {
 				results += test_imbalanced(A[m]);
 				m++;
 			}
 		} while (m < N);
 	} else {	
-		for (int l= world_rank - 1; l < start_chuck; l += world_size ) {
+		for (int l= world_rank - 1; l < start_chunk; l += world_size ) {
 			local_result += test_imbalanced(A[l]);
 		}
 		
