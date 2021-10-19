@@ -132,7 +132,7 @@ int main(int argc, char *argv[]) {
 			local_result += test_imbalanced(A[l]);
 		}
 		
-		MPI_Isend(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
+		MPI_Isend(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &send_req);
 			
 		MPI_Recv(&i, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 		
