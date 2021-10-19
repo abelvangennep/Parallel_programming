@@ -91,8 +91,8 @@ int main(int argc, char *argv[]) {
 	
 	
 	if (world_rank == 0) {
-		time_t start = time(NULL);
 		int m = (world_size - 1) * chuck_size;
+		time_t start = time(NULL);
 			
 		do {
 			MPI_Status status;
