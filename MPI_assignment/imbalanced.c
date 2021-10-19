@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
 			}
 		} while (m < N);
 	} else {	
-		for (int l= world_rank - 1; l < start_chunk; l += world_size ) {
+		for (int l= world_rank - 1; l < start_chunk; l += world_size - 1 ) {
 			local_result += test_imbalanced(A[l]);
 		}
 		
@@ -132,7 +132,7 @@ int main(int argc, char *argv[]) {
 		
 		do {		
 			local_result = 0;
-			for (int l= 0; l < chuck_size; l++) {
+			for (int l= 0; l < chunk_size; l++) {
 				local_result += test_imbalanced(A[l+i]);
 			}
 			
