@@ -5,8 +5,8 @@
 #include <math.h>
 #include "mpi.h"
 
-int N = 500;
-int R = 100;
+int N = 100;
+int R = 20;
 
 int test(int x) {
 	// Transform to a number beween 0 and 2 * pi.
@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
 	MPI_Request recv_req;
 	
 	
-	int i, j, results = 0, local_result = 0, message_received = 0, chunk_size = 2, start_chunk = 200;
+	int i, j, results = 0, local_result = 0, message_received = 0, chunk_size = 2, start_chunk = 2 * R;
 	int* A; 
 	A = allocate_mem(N);
 	
