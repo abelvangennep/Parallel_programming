@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
 	MPI_Request recv_req;
 	
 	
-	int i, results = 0, local_result = 0, message_received = 0, chunk_size = 5, start_chunk = 200;
+	int i, j, results = 0, local_result = 0, message_received = 0, chunk_size = 5, start_chunk = 200;
 	int* A; 
 	A = allocate_mem(N);
 	
@@ -133,7 +133,7 @@ int main(int argc, char *argv[]) {
 		MPI_Recv(&i, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 		
 		do {	
-			MPI_IRecv(&j, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &status_recv, &recv_req);
+			MPI_IRecv(&j, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &recv_status, &recv_req);
 			
 			local_result = 0;
 			for (int l= 0; l < chunk_size; l++) {
@@ -141,7 +141,7 @@ int main(int argc, char *argv[]) {
 			}
 			MPI_Wait(&recv_req, &recv_status);
 			
-			MPI_ISend(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &send_req);
+			MPI_Isend(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &send_req);
 			
 			MPI_IRecv(&i, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &recv_status, &recv_req);
 			
@@ -149,7 +149,7 @@ int main(int argc, char *argv[]) {
 			for (int l= 0; l < chunk_size; l++) {
 				local_result += test_imbalanced(A[l+j]);
 			}
-			MPI_Wait(&recv_req, &status);
+			MPI_Wait(&recv_req, &recv_status);
 			
 			MPI_ISend(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &send_req);
 		} while (i != -1);
