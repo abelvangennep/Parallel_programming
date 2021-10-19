@@ -63,8 +63,8 @@ void fill_ascending(int *A, int N) {
 }
 
 void decompose_domain(int N, int world_rank, int world_size, int* subdomain_start, int* subdomain_size) {
-  	*subdomain_size = N / (world_size - 1);
-  	*subdomain_start = *subdomain_size * (world_rank - 1);
+  	*subdomain_size = N / (world_size);
+  	*subdomain_start = *subdomain_size * (world_rank);
 	
   	if (world_rank == world_size - 1) {
     		// Give remainder to last process
@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
 	
 	decompose_domain(N, world_rank, world_size, &subdomain_start, &subdomain_size);
 	
-	maximum_sends_recvs = N / (world_size - 1) + N % world_size;
+	maximum_sends_recvs = N / (world_size) + N % world_size;
 	
 	if (world_rank == 0) {
 		fill_random(A, N);
@@ -121,6 +121,8 @@ int main(int argc, char *argv[]) {
 				MPI_Finalize();
     				return 0;
 			}
+			results += test(A[subdomain_start + m]);
+			
 			for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {
 				MPI_Recv(&local_result, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 				
