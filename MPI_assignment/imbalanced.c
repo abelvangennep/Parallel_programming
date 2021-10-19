@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
 	MPI_Request request;
 	
 	
-	int results = 0, local_result = 0, i = 0, message_received = 0, a_i;
+	int results = 0, local_result = 0, i = 0, message_received = 0, a_i, chuck_size = 5;
 	int* A; 
 	A = allocate_mem(N);
 	
@@ -91,12 +91,12 @@ int main(int argc, char *argv[]) {
 	
 	if (world_rank == 0) {
 		time_t start = time(NULL);
-		for (int l = 0; l < 5; l++) {
+		for (int l = 0; l < chuck_size; l++) {
 			results += test(A[l]);
 		}
-		int m = world_size * 5;
+		int m = world_size * chuck_size;
 			
-		for (m; m < N; m += 5) {
+		for (m; m < N; m += chuck_size) {
 			MPI_Status status;
 
 			MPI_Probe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &status);
@@ -117,16 +117,18 @@ int main(int argc, char *argv[]) {
 			MPI_Send(&m, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD);			
 		}
 	} else {
-		for (int l; l < 5; l++) {
-			local_result += test(A[l+world_rank*5]);
+		for (int l= 0; l < chuck_size; l++) {
+			local_result += test(A[l+world_rank*chuck_size]);
 		}
 		MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
 		local_result = 0;
-		for (int k; k < N; k++) {
+		for (int k = 0; k < N; k++) {
 			MPI_Recv(&i, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 			
 			if (a_i != -1){
-				local_result += test(A[i]);
+				for (int l = 0; l < chuck_size; l++) {
+					local_result += test(A[i]);
+				}
 				MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
 				local_result = 0;
 			} else {
