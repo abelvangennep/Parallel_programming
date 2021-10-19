@@ -144,6 +144,9 @@ int main(int argc, char *argv[]) {
 				local_result += test_imbalanced(A[l+i]);
 			}
 			MPI_Wait(&recv_req, &recv_status);
+			if (j == -1){
+				break;
+			}
 			
 			MPI_Isend(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &send_req);
 			
@@ -156,7 +159,7 @@ int main(int argc, char *argv[]) {
 			MPI_Wait(&recv_req, &recv_status);
 			
 			MPI_Isend(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &send_req);
-		} while (i != -1);
+		} while (i != -1 && j != -1);
 		
 		MPI_Barrier(MPI_COMM_WORLD);
 		MPI_Finalize();
