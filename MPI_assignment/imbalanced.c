@@ -126,6 +126,10 @@ int main(int argc, char *argv[]) {
 		do {
 			local_result = 0;
 			for (int l= 0; l < chuck_size; l++) {
+				MPI_Iprobe(0, 0, MPI_COMM_WORLD, &message_received, &status);
+				if (message_received) {
+					break;
+				}
 				local_result += test_imbalanced(A[l+i]);
 			}
 			
