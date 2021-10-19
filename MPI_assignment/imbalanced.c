@@ -70,8 +70,10 @@ int main(int argc, char *argv[]) {
   	int world_rank;
   	MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
 	
-	MPI_Status status;
+	MPI_Status recv_status;
 	MPI_Request request;
+	MPI_Request send_req;
+	MPI_Request recv_req;
 	
 	
 	int i, results = 0, local_result = 0, message_received = 0, chunk_size = 5, start_chunk = 200;
@@ -130,15 +132,26 @@ int main(int argc, char *argv[]) {
 			
 		MPI_Recv(&i, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 		
-		do {		
+		do {	
+			MPI_IRecv(&j, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &status_recv, &recv_req);
+			
 			local_result = 0;
 			for (int l= 0; l < chunk_size; l++) {
 				local_result += test_imbalanced(A[l+i]);
 			}
+			MPI_Wait(&recv_req, &recv_status);
 			
-			MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
+			MPI_ISend(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &send_req);
 			
-			MPI_Recv(&i, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+			MPI_IRecv(&i, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &recv_status, &recv_req);
+			
+			local_result = 0;
+			for (int l= 0; l < chunk_size; l++) {
+				local_result += test_imbalanced(A[l+j]);
+			}
+			MPI_Wait(&recv_req, &status);
+			
+			MPI_ISend(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &send_req);
 		} while (i != -1);
 		
 		MPI_Barrier(MPI_COMM_WORLD);
