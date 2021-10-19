@@ -143,7 +143,7 @@ int main(int argc, char *argv[]) {
 			
 			MPI_Isend(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &send_req);
 			
-			MPI_IRecv(&i, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &recv_status, &recv_req);
+			MPI_Irecv(&i, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &recv_status, &recv_req);
 			
 			local_result = 0;
 			for (int l= 0; l < chunk_size; l++) {
@@ -151,7 +151,7 @@ int main(int argc, char *argv[]) {
 			}
 			MPI_Wait(&recv_req, &recv_status);
 			
-			MPI_ISend(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &send_req);
+			MPI_Isend(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &send_req);
 		} while (i != -1);
 		
 		MPI_Barrier(MPI_COMM_WORLD);
