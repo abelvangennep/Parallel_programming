@@ -73,13 +73,14 @@ int main(int argc, char *argv[]) {
 	MPI_Status status;
 	MPI_Request request;
 	
-	int* A; 
-	A = allocate_mem(N);
+	
 	int results = 0, local_result = 0, i = 0, message_received = 0, a_i;
 	
 	time_t start = time(NULL);
 	
 	if (world_rank == 0) {
+		int* A; 
+		A = allocate_mem(N);
       		fill_random(A, N);
 		for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
 			MPI_Send(&A[i], 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
@@ -87,34 +88,33 @@ int main(int argc, char *argv[]) {
 		}
 		time_t start = time(NULL);
 		for (int m; m < N; m++) {
-			if (m % (world_size * 2 + 1) == 0) {
-				local_result = test(A[i]);
-			} else {
-				MPI_Status status;
+			MPI_Status status;
 
-				MPI_Probe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &status);
+			MPI_Probe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &status);
 
-				MPI_Recv(&local_result, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD, &status);
-				if ( results >= R) {
-					for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
-						int flag = -1;
-						MPI_Send(&flag, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
-					}
-					MPI_Barrier(MPI_COMM_WORLD);
-					printf("After barrier%.2f\n", (double)(time(NULL) - start));
-					printf("at itteration:%d\n",m);
-					MPI_Finalize();
-					return 0;
+			MPI_Recv(&local_result, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD, &status);
+			if ( results >= R) {
+				for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
+					int flag = -1;
+					MPI_Send(&flag, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
 				}
-
-				MPI_Send(&A[i], 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD);
-				i++;
-				results += local_result;
+				MPI_Barrier(MPI_COMM_WORLD);
+				printf("After barrier%.2f\n", (double)(time(NULL) - start));
+				printf("at itteration:%d\n",m);
+				MPI_Finalize();
+				return 0;
 			}
+
+			MPI_Send(&A[i], 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD);
+			i++;
+			results += local_result;
+			
 		}
 	} else {
+		int* A; 
+		A = allocate_mem(int 5);
 		for (int m; m < N; m++) {
-			MPI_Recv(&a_i, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+			MPI_Recv(&A, 5, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 			
 			if (a_i != -1){
 				local_result = test(a_i);
