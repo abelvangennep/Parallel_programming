@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
 		}
 		time_t start = time(NULL);
 		for (int m; m < N; m++) {
-			if (m % (world_size + 1) == 0) {
+			if (m % (world_size * 2 + 1) == 0) {
 				local_result = test(A[i]);
 			} else {
 				MPI_Status status;
