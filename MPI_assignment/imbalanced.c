@@ -106,6 +106,7 @@ int main(int argc, char *argv[]) {
 						int flag = -1;
 						MPI_Send(&flag, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
 					}
+					printf("Before barrier%.2f\n", (double)(time(NULL) - start));
 					MPI_Barrier(MPI_COMM_WORLD);
 					printf("After barrier%.2f\n", (double)(time(NULL) - start));
 					printf("at itteration:%d\n",m);
