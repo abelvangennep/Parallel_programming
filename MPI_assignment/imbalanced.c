@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
 	MPI_Request request;
 	
 	
-	int results = 0, local_result = 0, i = 0, message_received = 0, a_i, chuck_size = 5;
+	int results = 0, local_result = 0, i = 0, message_received = 0, chuck_size = 5;
 	int* A; 
 	A = allocate_mem(N);
 	
@@ -125,7 +125,7 @@ int main(int argc, char *argv[]) {
 		for (int k = 0; k < N; k++) {
 			MPI_Recv(&i, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 			
-			if (a_i != -1){
+			if (i != -1){
 				for (int l = 0; l < chuck_size; l++) {
 					local_result += test(A[i]);
 				}
