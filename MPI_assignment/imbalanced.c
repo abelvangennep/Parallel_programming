@@ -74,8 +74,7 @@ int main(int argc, char *argv[]) {
 	MPI_Request request;
 	
 	
-	int results = 0, local_result = 0, message_received = 0, chuck_size = 3, start_chuck = 200 / world_size;
-	int i = (world_rank-1)*chuck_size;
+	int results = 0, local_result = 0, message_received = 0, chunk_size = 3, start_chunk = 200;
 	int* A; 
 	A = allocate_mem(N);
 	
@@ -91,7 +90,7 @@ int main(int argc, char *argv[]) {
 	
 	
 	if (world_rank == 0) {
-		int m = (world_size - 1) * start_chuck;
+		int m = start_chunk;
 		time_t start = time(NULL);
 			
 		do {
@@ -123,8 +122,8 @@ int main(int argc, char *argv[]) {
 			}
 		} while (m < N);
 	} else {	
-		for (int l= 0; l < start_chuck; l++) {
-			local_result += test_imbalanced(A[i]);
+		for (int l= world_rank - 1; l < start_chuck; l += world_size ) {
+			local_result += test_imbalanced(A[l]);
 		}
 		
 		MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
