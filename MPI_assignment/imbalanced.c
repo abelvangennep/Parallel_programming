@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
 	MPI_Request request;
 	
 	
-	int results = 0, local_result = 0, message_received = 0, chuck_size = 2;
+	int results = 0, local_result = 0, message_received = 0, chuck_size = 10;
 	int i = (world_rank-1)*chuck_size;
 	int* A; 
 	A = allocate_mem(N);
