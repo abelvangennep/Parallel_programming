@@ -75,24 +75,34 @@ int main(int argc, char *argv[]) {
 	
 	
 	int results = 0, local_result = 0, i = 0, message_received = 0, a_i;
-	
-	time_t start = time(NULL);
+	int* A; 
+	A = allocate_mem(N);
 	
 	if (world_rank == 0) {
-		int* A; 
-		A = allocate_mem(N);
-      		fill_random(A, N);
+		fill_random(A, N);
+		
 		for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
-			MPI_Send(&A[i], 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
-			i++;
+        		MPI_Send(A, N, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
 		}
+	} else {
+		MPI_Recv(A, N, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+	}
+	
+	
+	if (world_rank == 0) {
 		time_t start = time(NULL);
-		for (int m; m < N; m++) {
+		for (int l = 0; l < 5; l++) {
+			results += test(A[l]);
+		}
+		int m = worl_size * 5
+			
+		for (m; m < N; m += 5) {
 			MPI_Status status;
 
 			MPI_Probe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &status);
 
 			MPI_Recv(&local_result, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD, &status);
+			results += local_result;
 			if ( results >= R) {
 				for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
 					int flag = -1;
@@ -104,21 +114,21 @@ int main(int argc, char *argv[]) {
 				MPI_Finalize();
 				return 0;
 			}
-
-			MPI_Send(&A[i], 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD);
-			i++;
-			results += local_result;
-			
+			MPI_Send(&m, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD);			
 		}
 	} else {
-		int* A; 
-		A = allocate_mem(int 5);
+		for (int l; l < 5; l++) {
+			local_result += test(a[l+world_rank*5]);
+		}
+		MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
+		local_result = 0;
 		for (int m; m < N; m++) {
-			MPI_Recv(&A, 5, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+			MPI_Recv(&m, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 			
 			if (a_i != -1){
-				local_result = test(a_i);
+				local_result += test(A[m]);
 				MPI_Send(&local_result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
+				local_result = 0;
 			} else {
 				MPI_Barrier(MPI_COMM_WORLD);
 				MPI_Finalize();
