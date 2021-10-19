@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
 		int m = start_chunk;
 		time_t start = time(NULL);
 		for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
-        		MPI_Isend(m, N, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, &send_req);
+        		MPI_Isend(&m, N, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, &send_req);
 			m++;
 		}
 			
