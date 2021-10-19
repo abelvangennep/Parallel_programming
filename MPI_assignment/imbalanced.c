@@ -133,7 +133,7 @@ int main(int argc, char *argv[]) {
 		MPI_Recv(&i, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 		
 		do {	
-			MPI_IRecv(&j, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &recv_status, &recv_req);
+			MPI_Irecv(&j, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &recv_status, &recv_req);
 			
 			local_result = 0;
 			for (int l= 0; l < chunk_size; l++) {
