@@ -5,8 +5,8 @@
 #include <math.h>
 #include "mpi.h"
 
-int N = 500;
-int R = 100;
+int N = 100;
+int R = 20;
 
 int test(int x) {
 	// Transform to a number beween 0 and 2 * pi.
