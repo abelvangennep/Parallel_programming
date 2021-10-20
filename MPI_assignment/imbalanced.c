@@ -5,8 +5,8 @@
 #include <math.h>
 #include "mpi.h"
 
-int N = 500;
-int R = 100;
+int N = 100;
+int R = 20;
 
 int test(int x) {
 	// Transform to a number beween 0 and 2 * pi.
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
 	A = allocate_mem(N);
 	
 	if (world_rank == 0) {
-		fill_random(A, N);
+		fill_ascending(A, N);
 		
 		for (int partner_rank = 1; partner_rank < world_size; partner_rank++) {	
         		MPI_Send(A, N, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
